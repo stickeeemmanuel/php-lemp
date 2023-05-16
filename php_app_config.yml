@@ -13,7 +13,7 @@
         owner: "root"
         mode: '0755'
         state: directory
-      become: root 
+      become: true 
       register: srv_dir
 
     - debug: var=srv_dir
