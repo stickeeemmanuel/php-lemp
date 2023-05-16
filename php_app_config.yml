@@ -30,16 +30,23 @@
 
     - name: Create app directories
       ansible.builtin.file:
-        path: "{{ item.dir_name }}"
-        owner: "{{ item.owner }}"
-        mode: "{{ item.mode }}"
+        path: "{{ item[2] }}/{{ item[0] }}"
+        owner: "{{ item[0] }}"
+        group: "{{ item[0] }}"
+        mode: "{{ item[1] }}"
         state: directory
-      with_items:
-        - { dir_name: "/var/log/php-fpm/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
-        - { dir_name: "/var/lib/php/sessions/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
-        - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" }
-#        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
-      
+      with_nested:
+        - "{{ user_list }}"
+        - [ '0700' ]
+        - [ '/var/log/php-fpm/','/var/lib/php/sessions/','/var/www/' ]
+
+    - name: Change /var/www directory permissions
+      ansible.builtin.file:
+        path: "/var/www/{{ item }}"
+        mode: '0755'
+        state: directory
+      loop: "{{ user_list }}"
+       
     - name: Check if www.conf exists 
       ansible.builtin.stat:
         path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
@@ -62,6 +69,20 @@
         - { src: "files/info.php", dest: "/var/www/{{ user_list }}/", owner: "{{ user_list }}" }
         - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf", owner: "root" }
         - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf", owner: "root" }
+
+    - name: Copy configuration files to server using templates.
+      ansible.builtin.template:
+        src: "{{ item[1] }}"
+        dest: "{{ item[2] }}"
+        owner: "{{ item.owner }}"
+        mode: 0644
+      with_nested:
+        - "{{ user_list }}"
+        - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2'  ]
+        - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/.conf','/etc/nginx/sites-available/-http.conf' ]
+        - { src: "", dest: "/{{ user_list }}/", owner: "{{ user_list }}" }
+        - { src: "", dest: "{{ user_list }}", owner: "root" }
+        - { src: "", dest: "{{ user_list }}", owner: "root" }
 
     - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
       ansible.builtin.file:

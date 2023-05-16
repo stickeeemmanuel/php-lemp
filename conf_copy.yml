@@ -1,0 +1,20 @@
+---
+- name: Playbook to configure a PHP app on a LEMP stack 
+  hosts: all
+  remote_user: emmanuel.apreko
+  become: true
+  vars_files:
+    - vars/main.yml
+  
+  tasks:
+    - name: Copy configuration files to server using templates.
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ item.owner }}"
+        mode: 0644
+      with_items:
+        - { src: "files/info.php", dest: "/var/www/{{ user_list }}/", owner: "{{ user_list }}" }
+        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf", owner: "root" }
+        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf", owner: "root" }
+        
