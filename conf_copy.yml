@@ -21,12 +21,12 @@
     - name: Copy configuration files to server using templates.
       ansible.builtin.template:
         src: "{{ item[1] }}"
-        dest: "{{ item.dest }}"
-        owner: "{{ item.owner }}"
+        dest: "{{ item[2] }}"
+        owner: "{{ item[3] }}"
         mode: '0644'
       with_nested:
         - "{{ user_list }}"
         - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-        - [ '/var/www/{{ user_list }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf','/etc/nginx/sites-available/{{ user_list }}-http.conf' ]
+        - [ '/var/www/{{ item.item[0] }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.item[0] }}.conf','/etc/nginx/sites-available/{{ item.item[0] }}-http.conf' ]
         - [ '{{ item.item[0] }}','root','root' ]
         # - { src: "", dest: "", owner: "{{ user_list }}" }     
