@@ -9,21 +9,17 @@
   tasks:
     - name: Create /srv/users/ directory
       ansible.builtin.file:
-        path: /tmp/dog
+        path: /srv/users/
         owner: root
         mode: '0755'
         state: directory
-      become: true 
-      register: srv_dir
-
-    - debug: var=srv_dir
 
     - name: Create app user 
       ansible.builtin.user:
         name: "{{ item }}"
         create_home: true
-        home: /srv/users/{{ app_username }}
-      loop: "{{ app_username }}"
+        home: /srv/users/{{ user_list }}
+      loop: "{{ user_list }}"
 
     - name: Add user www-data to app users' group
       ansible.builtin.user:
