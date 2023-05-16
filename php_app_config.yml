@@ -9,16 +9,17 @@
   tasks:
     - name: Create app user 
       ansible.builtin.user:
-        name: "{{ app_username }}"
+        name: "{{ item }}"
         create_home: true
         home: /srv/users/{{ app_username }}
+      loop: "{{ app_username }}"
 
     - name: Add user www-data to app users' group
       ansible.builtin.user:
         name: www-data
         groups: "{{ app_username }}"
         append: true 
-        
+
     - name: Create app directories
       ansible.builtin.file:
         path: "{{ item.dir_name }}"
