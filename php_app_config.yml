@@ -13,6 +13,9 @@
         owner: "root"
         mode: '0755'
         state: directory
+      register: srv_dir
+
+    - debug: var=srv_dir
 
     - name: Create app user 
       ansible.builtin.user:
