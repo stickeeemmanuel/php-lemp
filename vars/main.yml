@@ -1,0 +1,14 @@
+---
+# The php version installed on the remote server
+php_version: '8.2'
+
+# The php app name(s) to be deployed
+app_username: 
+  - app1
+  - app2
+
+# The app root directory on the remote server
+app_root_directory: "/var/www/{{ app_username }}"
+
+# The app domain name/URL
+domain_name: "{{ app_username }}.blowtorch.xyz"

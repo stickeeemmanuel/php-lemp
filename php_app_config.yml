@@ -1,0 +1,62 @@
+---
+- name: Playbook to configure a PHP app on a LEMP stack 
+  hosts: all
+  vars_files:
+    - vars/main.yml
+  
+  tasks:
+    - name: Create app directories
+      ansible.builtin.file:
+        path: {{ item.dir_name }}
+        owner: {{ item.owner }}
+        mode: {{ item.mode }}
+        state: directory
+      with_items:
+        - { dir_name: "/var/log/php-fpm/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
+        - { dir_name: "/var/lib/php/sessions/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
+        - { dir_name: "/var/www/{{ app_username }}", mode: '0755', owner: "{{ app_username }}" }
+        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
+      
+    - name: Create app user 
+      ansible.builtin.user:
+        name: {{ app_username }}
+        create_home: true
+        home: /srv/users/{{ app_username }}
+
+    - name: Add user www-data to app users' group
+      ansible.builtin.user:
+        name: www-data
+        groups: {{ app_username }}
+        append: true 
+
+    - name: Check if /etc/php/{{ php_version }}/fpm/pool.d/www.conf exists 
+      ansible.builtin.stat:
+        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+      register: check_file_name
+
+    - name: Rename www.conf to www.conf.default
+      ansible.builtin.copy:
+        remote_src: true
+        src: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
+      when: check_file_name.stat.exists == true
+
+    - name: Copy configuration files to server using templates.
+      template:
+        src: {{ item.src }}
+        dest: {{ item.dest }}
+        owner: {{ item.owner }}
+        mode: 0644
+      with_items:
+        - { src: "files/info.php", dest: "/var/www/{{ app_username }}/", owner: {{ app_username }} }
+        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ app_username }}.conf", owner: "root" }
+        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ app_username }}-http.conf", owner: "root" }
+
+    - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/{{ app_username }}-http.conf
+        dest: /etc/nginx/sites-enabled/{{ app_username }}-http.conf
+        state: link
+      notify: 
+      - reload nginx
+      - restart php-fpm
