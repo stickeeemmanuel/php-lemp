@@ -48,7 +48,7 @@
         owner: "{{ item.owner }}"
         mode: 0644
       with_items:
-        - { src: "files/info.php", dest: "/var/www/{{ app_username }}/", owner: {{ app_username }} }
+        - { src: "files/info.php", dest: "/var/www/{{ app_username }}/", owner: "{{ app_username }}" }
         - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ app_username }}.conf", owner: "root" }
         - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ app_username }}-http.conf", owner: "root" }
 
