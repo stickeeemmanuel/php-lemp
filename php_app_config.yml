@@ -9,8 +9,8 @@
   tasks:
     - name: Create /srv/users/ directory
       ansible.builtin.file:
-        path: "/var/dog"
-        owner: "root"
+        path: /tmp/dog
+        owner: root
         mode: '0755'
         state: directory
       become: true 
