@@ -13,5 +13,7 @@
         owner: "{{ item.owner }}"
         mode: "{{ item.mode }}"
         state: directory
-      loop:
-        - { dir_name: /var/log/php-fpm/{{ user_list }}, mode: '0700', owner: "{{ user_list }}" | flatten(1) }
+      with_items:
+        - { dir_name: /var/log/php-fpm/{{ user_list }}, mode: '0700', owner: "{{ user_list }}" }
+          
+        

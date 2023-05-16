@@ -34,10 +34,10 @@
         owner: "{{ item.owner }}"
         mode: "{{ item.mode }}"
         state: directory
-      loop:
-        - { dir_name: /var/log/php-fpm/{{ user_list }}, mode: '0700', owner: "{{ user_list }}" | flatten(1) }
-        - { dir_name: "/var/lib/php/sessions/{{ user_list }}", mode: '0700', owner: "{{ user_list }} "| flatten(1) }
-        - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" | flatten(1) }
+      with_items:
+        - { dir_name: "/var/log/php-fpm/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
+        - { dir_name: "/var/lib/php/sessions/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
+        - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" }
 #        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
       
     - name: Check if www.conf exists 
