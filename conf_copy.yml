@@ -29,4 +29,8 @@
         - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
         - [ '/var/www/{{ item[0] }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item[0] }}.conf','/etc/nginx/sites-available/{{ item[0] }}-http.conf' ]
         - [ '{{ item[0] }}','root','root' ]
-        # - { src: "", dest: "", owner: "{{ user_list }}" }     
+        # - { src: "", dest: "", owner: "{{ user_list }}" }  
+      register: dir_copy_output
+
+    - debug:
+        msg=dir_copy_output
