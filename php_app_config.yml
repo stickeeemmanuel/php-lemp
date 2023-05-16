@@ -34,7 +34,7 @@
         owner: "{{ item.owner }}"
         mode: "{{ item.mode }}"
         state: directory
-      with_nested:
+      loop:
         - { dir_name: "/var/log/php-fpm/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
         - { dir_name: "/var/lib/php/sessions/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
         - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" }
