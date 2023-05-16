@@ -7,6 +7,13 @@
     - vars/main.yml
   
   tasks:
+    - name: Create /srv/users/ directory
+      ansible.builtin.file:
+        path: "/srv/users"
+        owner: "root"
+        mode: '0755'
+        state: directory
+
     - name: Create app user 
       ansible.builtin.user:
         name: "{{ item }}"
@@ -30,7 +37,7 @@
         - { dir_name: "/var/log/php-fpm/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
         - { dir_name: "/var/lib/php/sessions/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
         - { dir_name: "/var/www/{{ app_username }}", mode: '0755', owner: "{{ app_username }}" }
-        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
+#        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
       
     - name: Check if /etc/php/{{ php_version }}/fpm/pool.d/www.conf exists 
       ansible.builtin.stat:
