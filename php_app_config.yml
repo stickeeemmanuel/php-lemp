@@ -19,7 +19,7 @@
       ansible.builtin.user:
         name: "{{ item }}"
         create_home: true
-#        home: /srv/users/"{{ user_list }}"
+        home: /srv/users/"{{ user_list }}"
       loop: "{{ user_list }}"
 
     - name: Add user www-data to app users' group
