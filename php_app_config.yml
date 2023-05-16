@@ -69,5 +69,5 @@
         dest: "/etc/nginx/sites-enabled/{{ user_list }}-http.conf"
         state: link
       notify: 
-      - reload nginx
-      - restart php-fpm
+        - reload nginx
+        - restart php-fpm
