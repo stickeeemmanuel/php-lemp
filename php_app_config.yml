@@ -40,7 +40,7 @@
         - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" }
 #        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
       
-    - name: Check if /etc/php/{{ php_version }}/fpm/pool.d/www.conf exists 
+    - name: Check if www.conf exists 
       ansible.builtin.stat:
         path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
       register: check_file_name
@@ -53,7 +53,7 @@
       when: check_file_name.stat.exists == true
 
     - name: Copy configuration files to server using templates.
-      template:
+      ansible.builtin.template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: "{{ item.owner }}"
