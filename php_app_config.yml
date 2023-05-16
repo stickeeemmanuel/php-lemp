@@ -25,7 +25,7 @@
     - name: Add user www-data to app users' group
       ansible.builtin.user:
         name: www-data
-        groups: "{{ app_username }}"
+        groups: "{{ user_list }}"
         append: true 
 
     - name: Create app directories
@@ -35,9 +35,9 @@
         mode: "{{ item.mode }}"
         state: directory
       with_items:
-        - { dir_name: "/var/log/php-fpm/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
-        - { dir_name: "/var/lib/php/sessions/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
-        - { dir_name: "/var/www/{{ app_username }}", mode: '0755', owner: "{{ app_username }}" }
+        - { dir_name: "/var/log/php-fpm/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
+        - { dir_name: "/var/lib/php/sessions/{{ user_list }}", mode: '0700', owner: "{{ user_list }}" }
+        - { dir_name: "/var/www/{{ user_list }}", mode: '0755', owner: "{{ user_list }}" }
 #        - { dir_name: "/srv/users", mode: '0755', owner: "root" }
       
     - name: Check if /etc/php/{{ php_version }}/fpm/pool.d/www.conf exists 
@@ -59,14 +59,14 @@
         owner: "{{ item.owner }}"
         mode: 0644
       with_items:
-        - { src: "files/info.php", dest: "/var/www/{{ app_username }}/", owner: "{{ app_username }}" }
-        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ app_username }}.conf", owner: "root" }
-        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ app_username }}-http.conf", owner: "root" }
+        - { src: "files/info.php", dest: "/var/www/{{ user_list }}/", owner: "{{ user_list }}" }
+        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf", owner: "root" }
+        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf", owner: "root" }
 
     - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
       ansible.builtin.file:
-        src: "/etc/nginx/sites-available/{{ app_username }}-http.conf"
-        dest: "/etc/nginx/sites-enabled/{{ app_username }}-http.conf"
+        src: "/etc/nginx/sites-available/{{ user_list }}-http.conf"
+        dest: "/etc/nginx/sites-enabled/{{ user_list }}-http.conf"
         state: link
       notify: 
       - reload nginx
