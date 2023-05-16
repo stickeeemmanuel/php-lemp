@@ -12,3 +12,7 @@ app_root_directory: "/var/www/{{ app_username }}"
 
 # The app domain name/URL
 domain_name: "{{ app_username }}.blowtorch.xyz"
+
+# List of users to create
+user_list: ["app1","app2"]
+
