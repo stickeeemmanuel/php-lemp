@@ -2,6 +2,7 @@
 - name: Playbook to configure a PHP app on a LEMP stack 
   hosts: all
   remote_user: emmanuel.apreko
+  become: true
   vars_files:
     - vars/main.yml
   
