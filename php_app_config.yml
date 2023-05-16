@@ -7,9 +7,9 @@
   tasks:
     - name: Create app directories
       ansible.builtin.file:
-        path: {{ item.dir_name }}
-        owner: {{ item.owner }}
-        mode: {{ item.mode }}
+        path: "{{ item.dir_name }}"
+        owner: "{{ item.owner }}"
+        mode: "{{ item.mode }}"
         state: directory
       with_items:
         - { dir_name: "/var/log/php-fpm/{{ app_username }}", mode: '0700', owner: "{{ app_username }}" }
@@ -19,14 +19,14 @@
       
     - name: Create app user 
       ansible.builtin.user:
-        name: {{ app_username }}
+        name: "{{ app_username }}"
         create_home: true
         home: /srv/users/{{ app_username }}
 
     - name: Add user www-data to app users' group
       ansible.builtin.user:
         name: www-data
-        groups: {{ app_username }}
+        groups: "{{ app_username }}"
         append: true 
 
     - name: Check if /etc/php/{{ php_version }}/fpm/pool.d/www.conf exists 
@@ -43,9 +43,9 @@
 
     - name: Copy configuration files to server using templates.
       template:
-        src: {{ item.src }}
-        dest: {{ item.dest }}
-        owner: {{ item.owner }}
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ item.owner }}"
         mode: 0644
       with_items:
         - { src: "files/info.php", dest: "/var/www/{{ app_username }}/", owner: {{ app_username }} }
@@ -54,8 +54,8 @@
 
     - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
       ansible.builtin.file:
-        src: /etc/nginx/sites-available/{{ app_username }}-http.conf
-        dest: /etc/nginx/sites-enabled/{{ app_username }}-http.conf
+        src: "/etc/nginx/sites-available/{{ app_username }}-http.conf"
+        dest: "/etc/nginx/sites-enabled/{{ app_username }}-http.conf"
         state: link
       notify: 
       - reload nginx
