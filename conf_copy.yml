@@ -8,9 +8,7 @@
   vars: 
     syncjobs:
       - filename: output1.bash
-        content: data1
       - filename: output2.bash
-        content: data2
   
   tasks:
     - name: Create scripts
@@ -20,7 +18,7 @@
         owner: root
         mode: "u+x,o-r"
       with_items: "{{ syncjobs }}"
-      
+
     # - name: Copy configuration files to server using templates.
     #   ansible.builtin.template:
     #     src: "{{ item.src }}"
