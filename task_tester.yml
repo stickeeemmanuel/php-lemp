@@ -9,10 +9,11 @@
   tasks:
     - name: Create app directories
       ansible.builtin.file:
-        path: "{{ item[0] }}/{{ item.user }}"
+        path: "{{ item[1] }}/{{ item.user }}"
         owner: "{{ item.user }}"
         group: "{{ item.user }}"
         mode: '0700'
         state: directory
       with_nested:
+        - "{{ app_username }}"
         - [ '/var/log/php-fpm/','/var/lib/php/sessions/','/var/www/' ]
