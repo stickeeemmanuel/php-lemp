@@ -9,9 +9,9 @@
   tasks:
     - name: Create app directories
       ansible.builtin.file:
-        path: "{{ item[1] }}/{{ item.user }}"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
+        path: "{{ item[1] }}/{{ item.app_username }}"
+        owner: "{{ item.app_username }}"
+        group: "{{ item.app_username }}"
         mode: '0700'
         state: directory
       with_nested:
