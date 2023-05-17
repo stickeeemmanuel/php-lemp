@@ -7,6 +7,13 @@
     - vars/main.yml
 
   tasks:
+    - name: Create app user ## issue diff dir perms for each user [0755/0750]
+      ansible.builtin.user:
+        name: "{{ item.user }}"
+        create_home: true
+        home: "/srv/users/{{ item.user }}"
+      with_items: "{{ app_username }}"
+      
     - name: Add user www-data to app users' group
       ansible.builtin.user:
         name: www-data
