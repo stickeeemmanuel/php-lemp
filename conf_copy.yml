@@ -44,7 +44,7 @@
         owner: "{{ item[0] }}"
         group: "{{ item[0] }}"
         mode: '0644'
-      loop: "{{ user_list }}"
+      with_nested: "{{ user_list }}"
     
     - name: Copy fpm.conf to app's fpm pool directory
       ansible.builtin.template:
@@ -53,7 +53,7 @@
         owner: "{{ item[0] }}"
         group: "{{ item[0] }}"
         mode: '0644'
-      loop: "{{ user_list }}"
+      with_nested: "{{ user_list }}"
 
     - name: Copy http.conf to app's nginx sites-available directory
       ansible.builtin.template:
@@ -62,7 +62,7 @@
         owner: "{{ item[0] }}"
         group: "{{ item[0] }}"
         mode: '0644'
-      loop: "{{ user_list }}"
+      with_nested: "{{ user_list }}"
     
       
         
