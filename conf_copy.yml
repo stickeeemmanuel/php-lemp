@@ -17,20 +17,52 @@
     #     - { src: "files/info.php", dest: "/var/www/{{ user_list }}/", owner: "{{ user_list }}" }
     #     - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf", owner: "root" }
     #     - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf", owner: "root" }
-          
-    - name: Copy configuration files to server using templates.
-      ansible.builtin.template:
-        src: "{{ item[1] }}"
-        dest: "{{ item[2] }}"
-        owner: "{{ item[3] }}"
-        mode: '0644'
-      with_nested:
-        - "{{ user_list }}"
-        - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-        - [ '/var/www/{{ item[0] }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item[0] }}.conf','/etc/nginx/sites-available/{{ item[0] }}-http.conf' ]
-        - [ '{{ item[0] }}','root','root' ]
-        # - { src: "", dest: "", owner: "{{ user_list }}" }  
-      register: dir_copy_output
+    #       copy all config files to /tmp/conf_files/
+    #       output user_list to file and copy to /tmp/conf_files/ with_nested:
+    # - name: Copy configuration files to server using templates.
+    #   ansible.builtin.shell: |
+    #     php_version=`php -v|head -1|awk '{print $2}'|head -c -3`
+    #     cat user_list | while read line 
+    #     do 
+    #     for i in $line
+    #     do
+    #     cp /tmp/conf_files/info.php /var/www/$i
+    #     chown -R $i: /var/www/$i
+    #     cp /tmp/conf_files/fpm.conf /etc/php/$(php_version)/fpm/pool.d/$i.conf
+    #     chown root: /etc/php/$(php_version)/fpm/pool.d/$i.conf
+    #     cp /tmp/conf_files/http.conf /etc/nginx/sites-available/$i-http.conf
+    #     chown root: /etc/nginx/sites-available/$i-http.conf
+    #     done
+    #     done 
+    #   args:
+    #     executable: /bin/bash
 
-    - debug:
-        msg=dir_copy_output
+    - name: Copy test php page to app directory
+      ansible.builtin.template:
+        src: "files/info.php"
+        dest: "/var/www/{{ item }}/"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: '0644'
+      loop: "{{ user_list }}"
+    
+    - name: Copy fpm.conf to app's fpm pool directory
+      ansible.builtin.template:
+        src: "files/fpm.conf.j2"
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item }}.conf"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: '0644'
+      loop: "{{ user_list }}"
+
+    - name: Copy http.conf to app's nginx sites-available directory
+      ansible.builtin.template:
+        src: "files/http.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ item }}-http.conf"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: '0644'
+      loop: "{{ user_list }}"
+    
+      
+        
