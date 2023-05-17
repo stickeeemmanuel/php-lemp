@@ -4,8 +4,8 @@ php_version: '8.2'
 
 # The php app name(s) to be deployed
 app_username: 
-  - app1
-  - app2
+  - user: app1
+  - user: app2
 
 # The app root directory on the remote server
 app_root_directory: "/var/www/{{ app_username }}"
