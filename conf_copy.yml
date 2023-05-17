@@ -40,11 +40,11 @@
     - name: Copy test php page to app directory
       ansible.builtin.template:
         src: "files/info.php"
-        dest: "/var/www/{{ item.user_list }}/"
+        dest: "/var/www/{{ item.app_username }}/"
         owner: "{{ item }}"
         group: "{{ item }}"
         mode: '0644'
-      with_items: "{{ user_list }}"
+      with_items: "{{ app_username }}"
     
     # - name: Copy fpm.conf to app's fpm pool directory
     #   ansible.builtin.template:

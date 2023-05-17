@@ -1,1 +1,1 @@
-<?php echo 'This is' + {{ item.user_list }};
+<?php echo 'This is' + {{ app_username }};
