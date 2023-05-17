@@ -13,6 +13,14 @@
         content: data2
   
   tasks:
+    - name: Create scripts
+      ansible.builtin.template:
+        src: "files/fpm.conf.j2"
+        dest: /var/www/{{ item.filename }}
+        owner: root
+        mode: "u+x,o-r"
+      with_items: "{{ syncjobs }}"
+      
     # - name: Copy configuration files to server using templates.
     #   ansible.builtin.template:
     #     src: "{{ item.src }}"
@@ -71,10 +79,3 @@
     #   loop: "{{ user_list }}"
     
       
-    - name: Create scripts
-      ansible.builtin.template:
-        src: "files/fpm.conf.j2"
-        dest: /var/www/{{ item.filename }}
-        owner: root
-        mode: "u+x,o-r"
-      with_items: "{{ syncjobs }}"
