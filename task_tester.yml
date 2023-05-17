@@ -1,0 +1,15 @@
+---
+- name: Playbook to configure a PHP app on a LEMP stack 
+  hosts: all
+  remote_user: emmanuel.apreko
+  become: true
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Create app user 
+      ansible.builtin.user:
+        name: "{{ item.user }}"
+        create_home: true
+        home: "/srv/users/{{ item.user }}"
+      with_items: "{{ app_username }}"
