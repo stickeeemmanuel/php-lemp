@@ -7,9 +7,8 @@
     - vars/main.yml
 
   tasks:
-    - name: Create app user 
+    - name: Add user www-data to app users' group
       ansible.builtin.user:
-        name: "{{ item.user }}"
-        create_home: true
-        home: "/srv/users/{{ item.user }}"
-      with_items: "{{ app_username }}"
+        name: www-data
+        groups: "{{ item.user }}"
+      with_items: "{{ app_username }}" 
