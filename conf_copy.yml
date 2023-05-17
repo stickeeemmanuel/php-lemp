@@ -40,29 +40,29 @@
     - name: Copy test php page to app directory
       ansible.builtin.template:
         src: "files/info.php"
-        dest: "/var/www/{{ item }}/"
+        dest: "/var/www/{{ item.user_list }}/"
         owner: "{{ item }}"
         group: "{{ item }}"
         mode: '0644'
       loop: "{{ user_list }}"
     
-    - name: Copy fpm.conf to app's fpm pool directory
-      ansible.builtin.template:
-        src: "files/fpm.conf.j2"
-        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item }}.conf"
-        owner: "{{ item }}"
-        group: "{{ item }}"
-        mode: '0644'
-      loop: "{{ user_list }}"
+    # - name: Copy fpm.conf to app's fpm pool directory
+    #   ansible.builtin.template:
+    #     src: "files/fpm.conf.j2"
+    #     dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item }}.conf"
+    #     owner: "{{ item }}"
+    #     group: "{{ item }}"
+    #     mode: '0644'
+    #   loop: "{{ user_list }}"
 
-    - name: Copy http.conf to app's nginx sites-available directory
-      ansible.builtin.template:
-        src: "files/http.conf.j2"
-        dest: "/etc/nginx/sites-available/{{ item }}-http.conf"
-        owner: "{{ item }}"
-        group: "{{ item }}"
-        mode: '0644'
-      loop: "{{ user_list }}"
+    # - name: Copy http.conf to app's nginx sites-available directory
+    #   ansible.builtin.template:
+    #     src: "files/http.conf.j2"
+    #     dest: "/etc/nginx/sites-available/{{ item }}-http.conf"
+    #     owner: "{{ item }}"
+    #     group: "{{ item }}"
+    #     mode: '0644'
+    #   loop: "{{ user_list }}"
     
       
         
