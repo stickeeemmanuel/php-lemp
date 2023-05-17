@@ -44,7 +44,7 @@
         owner: "{{ item }}"
         group: "{{ item }}"
         mode: '0644'
-      loop: "{{ user_list }}"
+      with_items: "{{ user_list }}"
     
     # - name: Copy fpm.conf to app's fpm pool directory
     #   ansible.builtin.template:
