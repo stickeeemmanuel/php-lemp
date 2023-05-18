@@ -5,26 +5,37 @@
   become: true
   vars_files:
     - vars/main.yml
-  vars:
-    file_paths:
-      - file_src: "templates/info.php"
-      - file_src: "templates/fpm.conf.j2"
-      - file_src: "templates/http.conf.j2"
-      - file_dest: "/var/www/{{ item.user }}/"
-        file_owner: "{{ item.user }}"
-      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
-        file_owner: "root"
-      - file_dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
-        file_owner: "root"
-
+  
   tasks:
-    - name: Copy test php page to app directory
+    - name: Copy configuration files to server using templates.
       ansible.builtin.template:
-        src: "{{ file_src }}"
-        dest: "{{ file_dest }}"
-        mode: '0644'
-        owner: "{{ file_owner }}"
-      loop: "{{ file_paths | zip(app_username) }}"
+        src: 'templates/info.php'
+        dest: "/var/www/{{ item.user }}/"
+        owner: "{{ item.user }}"
+        mode: 0644
+      loop: "{{ app_username }}"
+
+
+  # vars:
+  #   file_paths:
+  #     - file_src: "templates/info.php"
+  #     - file_src: "templates/fpm.conf.j2"
+  #     - file_src: "templates/http.conf.j2"
+  #     - file_dest: "/var/www/{{ item.user }}/"
+  #       file_owner: "{{ item.user }}"
+  #     - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
+  #       file_owner: "root"
+  #     - file_dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+  #       file_owner: "root"
+
+  # tasks:
+  #   - name: Copy test php page to app directory
+  #     ansible.builtin.template:
+  #       src: "{{ file_src }}"
+  #       dest: "{{ file_dest }}"
+  #       mode: '0644'
+  #       owner: "{{ file_owner }}"
+  #     loop: "{{ file_paths | zip(app_username) }}"
          
 
 
