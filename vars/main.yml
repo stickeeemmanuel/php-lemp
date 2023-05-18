@@ -6,13 +6,15 @@ php_version: '8.2'
 app_username: 
   - user: app1
   - user: app2
-
-# The app root directory on the remote server
-app_root_directory: "/var/www/{{ app_username }}"
-
-# The app domain name/URL
-domain_name: "{{ app_username }}.blowtorch.xyz"
-
+    
 # List of users to create
 user_list: ["app1","app2"]
+
+# The app root directory on the remote server
+app_root_directory: "/var/www/{{ item.name }}"
+
+# The app domain name/URL
+domain_name: "{{ item.name }}.blowtorch.xyz"
+
+
 
