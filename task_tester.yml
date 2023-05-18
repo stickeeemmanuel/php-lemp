@@ -10,11 +10,11 @@
       - file_src: "templates/info.php"
       - file_src: "templates/fpm.conf.j2"
       - file_src: "templates/http.conf.j2"
-      - file_dest: "/var/www/{{ lookup('file', vars/main.yml app_username['user']) }}/"
-        file_owner: "{{ lookup('file', vars/main.yml app_username['user']) }}"
-      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ lookup('file', vars/main.yml app_username['user']) }}.conf"
+      - file_dest: "/var/www/{{ item.user }}/"
+        file_owner: "{{ item.user }}"
+      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
         file_owner: "root"
-      - file_dest: "/etc/nginx/sites-available/{{ lookup('file', vars/main.yml app_username['user']) }}-http.conf"
+      - file_dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
         file_owner: "root"
 
   tasks:
@@ -24,7 +24,7 @@
         dest: "{{ file_dest }}"
         mode: '0644'
         owner: "{{ file_owner }}"
-      loop: [ "{{ app_username }}","{{ file_paths }}" ]
+      loop: "{{ app_username | zip(file_paths) }}"
          
 
 
