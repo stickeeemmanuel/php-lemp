@@ -86,5 +86,5 @@
         state: link
       loop: "{{ app_username }}"
       notify: 
-        - reload nginx
-        - restart php-fpm
+      - reload nginx
+      - restart php-fpm
