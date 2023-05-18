@@ -11,12 +11,8 @@
       ansible.builtin.template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
         mode: '0644'
       with_items: 
         - { src: files/info.php, dest: "/var/www/{{ item.user }}/", user: "{{ app_username }}" }
-        - { src: files/fpm.conf.j2, dest: '/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf', user: "{{ app_username }}" }
-        - { src: files/http.conf.j2, dest: '/etc/nginx/sites-available/{{ item.user }}-http.conf', user: "{{ app_username }}" }
-        
+
 
