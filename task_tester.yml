@@ -13,6 +13,6 @@
         dest: "{{ item.dest }}"
         mode: '0644'
       with_items: 
-        - { src: files/info.php, dest: "/var/www/{{ item.user }}/", user: "{{ app_username }}" }
+        - { src: files/info.php, dest: "/var/www/" }
 
 
