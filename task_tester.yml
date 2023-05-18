@@ -24,7 +24,7 @@
         dest: "{{ file_dest }}"
         mode: '0644'
         owner: "{{ file_owner }}"
-      loop: "{{ app_username | zip(file_paths) }}"
+      loop: "{{ file_paths | zip(app_username) }}"
          
 
 
