@@ -7,7 +7,7 @@
     - vars/main.yml
   vars:
     - file_src: "files/info.php"
-    - file_dest: "/var/www/{{ item.user }}"
+    - file_dest: "/var/www/{{ user_list }}"
     - app_username:
         - user: app1
         - user: app2
