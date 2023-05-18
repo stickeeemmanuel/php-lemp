@@ -15,7 +15,7 @@
         src: "{{ item.file_src }}"
         dest: "{{ item.file_dest }}"
         mode: '0644'
-      with_items: "{{ app_username }}"
+      
 
 
 
