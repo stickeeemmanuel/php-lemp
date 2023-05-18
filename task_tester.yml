@@ -24,7 +24,9 @@
         dest: "{{ file_dest }}"
         mode: '0644'
         owner: "{{ item.file_owner }}"
-      loop: "{{ app_username }}"
+      loop: 
+        - "{{ app_username }}"
+        - "{{ file_paths }}"
       # loop: [ "{{ app_username }}","{{ file_paths }}" ]
 
       
