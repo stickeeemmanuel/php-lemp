@@ -10,7 +10,7 @@
         - user: app1
         - user: app2
     file_src: "files/info.php"
-    file_dest: "/var/www/{{ item.user }}"
+    file_dest: "/var/www/{{ php_version }}"
 
   tasks:
     - name: Copy test php page to app directory
