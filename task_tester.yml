@@ -6,9 +6,6 @@
   vars_files:
     - vars/main.yml
   vars:
-    app_username:
-        - user: app1
-        - user: app2
     file_src: "files/info.php"
     file_dest: "/var/www/{{ php_version }}"
 
@@ -18,6 +15,7 @@
         src: "{{ file_src }}"
         dest: "{{ file_dest }}"
         mode: '0644'
+      loop: "{{ app_username }}"
 
       
 
