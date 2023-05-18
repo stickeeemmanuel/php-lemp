@@ -7,16 +7,16 @@
     - vars/main.yml
 
   tasks:
-    - name: Copy test php page to app directory
-      ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
-        mode: '0644'
-      with_items: 
-        - "{{ app_username }}"
-        - { src: 'files/info.php', dest: '/var/www/{{ item.user }}/' }
+    # - name: Copy test php page to app directory
+    #   ansible.builtin.template:
+    #     src: "{{ item.src }}"
+    #     dest: "{{ item.dest }}"
+    #     owner: "{{ item.user }}"
+    #     group: "{{ item.user }}"
+    #     mode: '0644'
+    #   with_items: 
+    #     - "{{ app_username }}"
+    #     - { src: 'files/info.php', dest: '/var/www/{{ item.user }}/' }
 
     #   ## This works
     # - name: Copy test php page to app directory
@@ -28,17 +28,17 @@
     #     mode: '0644'
     #   with_items: "{{ app_username }}"
 
-    # - name: Copy test php page to app directory
-    #   ansible.builtin.template:
-    #     src: "{{ item[1] }}"
-    #     dest: "{{ item[2] }}"
-    #     owner: "{{ item.user }}"
-    #     group: "{{ item.user }}"
-    #     mode: '0644'
-    #   with_nested: 
-    #     - "{{ app_username }}"
-    #     - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-    #     - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
+    - name: Copy test php page to app directory
+      ansible.builtin.template:
+        src: "{{ item[1] }}"
+        dest: "{{ item[2] }}"
+        owner: "{{ item.user }}"
+        group: "{{ item.user }}"
+        mode: '0644'
+      with_nested: 
+        - [ "{{ app_username }}" ]
+        - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
+        - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
 
     # - name: Copy test php page to app directory
     #   ansible.builtin.template:
