@@ -14,7 +14,7 @@
         owner: "{{ item[0] }}"
         mode: 0644
       with_nested:
-        - [ "{{ app_username }}" ]
+        - "{{ app_username }}"
         - [ 'templates/test.php','templates/fpm.conf.j2','templates/http.conf.j2'  ]
         - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/.conf','/etc/nginx/sites-available/-http.conf' ]
 
