@@ -10,11 +10,11 @@
       - file_src: "templates/info.php"
       - file_src: "templates/fpm.conf.j2"
       - file_src: "templates/http.conf.j2"
-      - file_dest: "/var/www/{{ item.user }}/"
-        file_owner: "{{ item.user }}"
-      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
+      - file_dest: "/var/www/{{ app_username['item.user'] }}/"
+        file_owner: "{{ app_username['item.user'] }}"
+      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ app_username['item.user'] }}.conf"
         file_owner: "root"
-      - file_dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+      - file_dest: "/etc/nginx/sites-available/{{ app_username['item.user'] }}-http.conf"
         file_owner: "root"
 
   tasks:
