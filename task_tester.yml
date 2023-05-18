@@ -7,48 +7,13 @@
     - vars/main.yml
 
   tasks:
-    # - name: Copy test php page to app directory
-    #   ansible.builtin.template:
-    #     src: "{{ item.src }}"
-    #     dest: "{{ item.dest }}"
-    #     owner: "{{ item.user }}"
-    #     group: "{{ item.user }}"
-    #     mode: '0644'
-    #   with_items: 
-    #     - "{{ app_username }}"
-    #     - { src: 'files/info.php', dest: '/var/www/{{ item.user }}/' }
-
-    #   ## This works
-    # - name: Copy test php page to app directory
-    #   ansible.builtin.template:
-    #     src: "files/info.php"
-    #     dest: "/var/www/{{ item.user }}/"
-    #     owner: "{{ item.user }}"
-    #     group: "{{ item.user }}"
-    #     mode: '0644'
-    #   with_items: "{{ app_username }}"
 
     - name: Copy test php page to app directory
       ansible.builtin.template:
         src: "{{ item[0] }}"
         dest: "{{ item[1] }}"
-        # owner: "{{ item.user }}"
-        # group: "{{ item.user }}"
         mode: '0644'
       with_nested: 
-        # - [ "{{ app_username }}" ]
         - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
         - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/','/etc/nginx/sites-available/' ]
 
-    # - name: Copy test php page to app directory
-    #   ansible.builtin.template:
-    #     src: "{{ item.src }}"
-    #     dest: "{{ item.dest }}"
-    #     owner: "{{ item.user }}"
-    #     group: "{{ item.user }}"
-    #     mode: '0644'
-    #   with_items: 
-    #     - { src: files/info.php, dest: "/var/www/{{ user_list }}/" }
-    #     - { src: files/fpm.conf.j2, dest: '/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf' }
-    #     - { src: files/http.conf.j2, dest: '/etc/nginx/sites-available/{{ user_list }}-http.conf' }
-    #     - "{{ app_username }}"
