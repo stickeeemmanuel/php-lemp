@@ -7,16 +7,27 @@
     - vars/main.yml
 
   tasks:
+    # - name: Copy test php page to app directory
+    #   ansible.builtin.template:
+    #     src: "{{ item[1] }}"
+    #     dest: "{{ item[2] }}"
+    #     owner: "{{ item.user }}"
+    #     group: "{{ item.user }}"
+    #     mode: '0644'
+    #   with_nested: 
+    #     - "{{ app_username }}"
+    #     - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
+    #     - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
+
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item[1] }}"
-        dest: "{{ item[2] }}"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
         owner: "{{ item.user }}"
         group: "{{ item.user }}"
         mode: '0644'
-      with_nested: 
+      with_items: 
         - "{{ app_username }}"
-        # - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-        # - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
-        - [ 'files/info.php' ]
-        - [ '/var/www/{{ item.user }}/' ]
+        - { src: "files/info.php", dest: "/var/www/{{ user_list }}/" }
+        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf" }
+        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf" }
