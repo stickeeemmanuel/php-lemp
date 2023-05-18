@@ -7,26 +7,20 @@
     - vars/main.yml
   
   tasks:
-    # - name: Create /srv/users/ directory 
-    #   ansible.builtin.file:
-    #     path: "/srv/users/{{ item }}"
-    #     owner: root
-    #     mode: '0755'
-    #     state: directory
-    #   loop: "{{ user_list }}"
-
     - name: Create app user ## issue with dir perms [0750]
       ansible.builtin.user:
         name: "{{ item.user }}"
         create_home: true
         home: "/srv/users/{{ item.user }}"
-      with_items: "{{ app_username }}"
+      with_items: 
+        - "{{ app_username }}"
 
     - name: Add user www-data to app users' group ## issue only adds app2 group
       ansible.builtin.user:
         name: www-data
         groups: "{{ item.user }}"
-      with_items: "{{ app_username }}" 
+      with_items: 
+        - "{{ app_username }}" 
 
     - name: Create app directories
       ansible.builtin.file:
@@ -67,24 +61,28 @@
         mode: 0644
       loop: "{{ app_username }}"
 
-    - name: Copy configuration files to server using templates.
+    - name: Copy fpm php configuration files to server using templates.
       ansible.builtin.template:
-        src: "{{ item[1] }}"
-        dest: "{{ item[2] }}"
-        owner: "{{ item[0] }}"
+        src: 'templates/fpm.conf.j2'
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
+        owner: "root"
+        group: "root"
         mode: 0644
-      with_nested:
-        - [ "{{ app_username }}" ]
-        - [ 'templates/test.php','templates/fpm.conf.j2','templates/http.conf.j2'  ]
-        - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/.conf','/etc/nginx/sites-available/-http.conf' ]
-        - { src: "templates/test.php", dest: "/var/www/{{ item.user }}", owner: "{{ item.user }}" }
-        - { src: "templates/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf", owner: "root" }
-        - { src: "templates/http.conf.j2", dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf", owner: "root" }
+      loop: "{{ app_username }}"
+
+    - name: Copy http configuration files to server using templates.
+      ansible.builtin.template:
+        src: 'templates/http.conf.j2'
+        dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      loop: "{{ app_username }}"            
 
     - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
       ansible.builtin.file:
-        src: "/etc/nginx/sites-available/{{ user_list }}-http.conf"
-        dest: "/etc/nginx/sites-enabled/{{ user_list }}-http.conf"
+        src: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+        dest: "/etc/nginx/sites-enabled/{{ item.user }}-http.conf"
         state: link
       notify: 
         - reload nginx
