@@ -7,33 +7,19 @@
     - vars/main.yml
   
   tasks:
-    - name: Copy test php configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/test.php'
-        dest: "/var/www/{{ item.user }}/"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
-        mode: 0644
+    - name: Create app user ## issue with dir perms [0750]
+      ansible.builtin.user:
+        name: "{{ item.user }}"
+        create_home: true
+        home: "/srv/users/{{ item.user }}"
       loop: "{{ app_username }}"
 
-    - name: Copy fpm php configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/fpm.conf.j2'
-        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
-        owner: "root"
-        group: "root"
-        mode: 0644
-      loop: "{{ app_username }}"
+    - name: Add user www-data to app users' group ## issue only adds app2 group
+      ansible.builtin.user:
+        name: www-data
+        groups: "{{ item.user }}"
+      loop: "{{ app_username }}" 
 
-    - name: Copy http configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/http.conf.j2'
-        dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
-        owner: "root"
-        group: "root"
-        mode: 0644
-      loop: "{{ app_username }}"   
-      
   # vars:
   #   file_paths:
   #     - file_src: "templates/info.php"
