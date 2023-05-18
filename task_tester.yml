@@ -7,20 +7,18 @@
     - vars/main.yml
   
   tasks:
-    - name: Create app user ## issue with dir perms [0750]
-      ansible.builtin.user:
-        name: "{{ item.user }}"
-        create_home: true
-        home: "/srv/users/{{ item.user }}"
-      with_items: 
-        - "{{ app_username }}"
+    - name: Check if www.conf exists 
+      ansible.builtin.stat:
+        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+      register: check_file_name
 
-    - name: Add user www-data to app users' group ## issue only adds app2 group
-      ansible.builtin.user:
-        name: www-data
-        groups: "{{ item.user }}"
-      with_items: 
-        - "{{ app_username }}" 
+    - name: Rename www.conf to www.conf.default
+      ansible.builtin.copy:
+        remote_src: true
+        src: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
+        state: absent
+      when: check_file_name.stat.exists == true
 
   # vars:
   #   file_paths:
