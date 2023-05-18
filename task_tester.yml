@@ -12,8 +12,8 @@
   tasks:
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item.file_src }}"
-        dest: "{{ item.file_dest }}"
+        src: "{{ file_src }}"
+        dest: "{{ file_dest }}"
         mode: '0644'
       
 
