@@ -27,7 +27,7 @@
         group: "{{ item.user }}"
         mode: '0644'
       with_items: 
+        - { src: files/info.php, dest: "/var/www/{{ user_list }}/" }
+        - { src: files/fpm.conf.j2, dest: '/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf' }
+        - { src: files/http.conf.j2, dest: '/etc/nginx/sites-available/{{ user_list }}-http.conf' }
         - "{{ app_username }}"
-        - { src: "files/info.php", dest: "/var/www/{{ user_list }}/" }
-        - { src: "files/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ user_list }}.conf" }
-        - { src: "files/http.conf.j2", dest: "/etc/nginx/sites-available/{{ user_list }}-http.conf" }
