@@ -20,11 +20,11 @@
   tasks:
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ file_paths['file_src'] }}"
-        dest: "{{ file_paths['file_dest'] }}"
+        src: "{{ file_src }}"
+        dest: "{{ file_dest }}"
         mode: '0644'
-        owner: "{{ item.file_owner }}"
-      loop: "{{ app_username }}"
+        owner: "{{ file_owner }}"
+      loop: [ "{{ app_username }}","{{ file_paths }}" ]
          
 
 
