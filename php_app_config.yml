@@ -58,11 +58,12 @@
         dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
       when: check_file_name.stat.exists == true
 
-    - name: Copy configuration files to server using templates.
+    - name: Copy test php configuration files to server using templates.
       ansible.builtin.template:
-        src: 'templates/info.php'
+        src: 'templates/test.php'
         dest: "/var/www/{{ item.user }}/"
         owner: "{{ item.user }}"
+        group: "{{ item.user }}"
         mode: 0644
       loop: "{{ app_username }}"
 
@@ -70,15 +71,15 @@
       ansible.builtin.template:
         src: "{{ item[1] }}"
         dest: "{{ item[2] }}"
-        owner: "{{ item.owner }}"
+        owner: "{{ item[0] }}"
         mode: 0644
       with_nested:
-        - "{{ user_list }}"
-        - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2'  ]
+        - [ "{{ app_username }}" ]
+        - [ 'templates/test.php','templates/fpm.conf.j2','templates/http.conf.j2'  ]
         - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/.conf','/etc/nginx/sites-available/-http.conf' ]
-        - { src: "", dest: "/{{ user_list }}/", owner: "{{ user_list }}" }
-        - { src: "", dest: "{{ user_list }}", owner: "root" }
-        - { src: "", dest: "{{ user_list }}", owner: "root" }
+        - { src: "templates/test.php", dest: "/var/www/{{ item.user }}", owner: "{{ item.user }}" }
+        - { src: "templates/fpm.conf.j2", dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf", owner: "root" }
+        - { src: "templates/http.conf.j2", dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf", owner: "root" }
 
     - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
       ansible.builtin.file:
