@@ -32,11 +32,11 @@
       ansible.builtin.template:
         src: "{{ item[1] }}"
         dest: "{{ item[2] }}"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
+        # owner: "{{ item.user }}"
+        # group: "{{ item.user }}"
         mode: '0644'
       with_nested: 
-        - [ "{{ app_username }}" ]
+        # - [ "{{ app_username }}" ]
         - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
         - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
 
