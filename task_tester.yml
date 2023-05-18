@@ -14,5 +14,6 @@
         mode: '0644'
       with_items: 
         - { src: files/info.php, dest: "/var/www/" }
+        - "{{ app_username }}"
 
 
