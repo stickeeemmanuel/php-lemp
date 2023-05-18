@@ -7,13 +7,16 @@
     - vars/main.yml
 
   tasks:
-
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item[0] }}"
-        dest: "{{ item[1] }}"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ item.user }}"
+        group: "{{ item.user }}"
         mode: '0644'
-      with_nested: 
-        - [ 'files/info.php' ]
-        - [ '/var/www/' ]
+      with_items: 
+        - { src: files/info.php, dest: "/var/www/{{ item.user }}/" }
+        - { src: files/fpm.conf.j2, dest: '/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf' }
+        - { src: files/http.conf.j2, dest: '/etc/nginx/sites-available/{{ item.user }}-http.conf' }
+        - "{{ app_username }}"
 
