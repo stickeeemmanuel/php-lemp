@@ -16,5 +16,7 @@
         mode: '0644'
       with_nested: 
         - "{{ app_username }}"
-        - [ 'files/info.php', 'files/fpm.conf.j2', 'files/http.conf.j2' ]
-        - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
+        # - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
+        # - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
+        - [ 'files/info.php' ]
+        - [ '/var/www/{{ item.user }}/' ]
