@@ -7,8 +7,19 @@
     - vars/main.yml
   # vars: 
   #   syncjobs:
-  #     - filename: output1.bash
-  #     - filename: output2.bash
+        # - filename: output1.bash
+        #   content: data1
+        # - filename: output2.bash
+        #   content: data2
+  # tasks:
+  #   - name: Create scripts
+  #     ansible.builtin.template:
+  #       src: template.bash.j2
+  #       dest: /opt/bin/{{ item.filename }}
+  #       owner: root
+  #       mode: "u+x,o-r"
+  #       backup: true
+  #     with_items: "{{ syncjobs }}"
   
   tasks:
     # - name: Create scripts

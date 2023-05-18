@@ -5,17 +5,17 @@
   become: true
   vars_files:
     - vars/main.yml
+  vars:
+    - file_src: "files/info.php"
+    - file_dest: "/var/www/{{ item.user }}"
 
   tasks:
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+        src: "{{ item.file_src }}"
+        dest: "{{ item.file_dest }}"
         mode: '0644'
-      with_items: 
-        - { src: files/info.php, dest: "/var/www/{{ item.user }}" }
-        - "{{ app_username }}"
-      with_filetree: 'templates/'
-      when: item.state == 'file'
+      with_items: "{{ app_username }}"
+
 
 
