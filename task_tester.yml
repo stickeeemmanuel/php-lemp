@@ -7,17 +7,33 @@
     - vars/main.yml
   
   tasks:
-    - name: Copy configuration files to server using templates.
+    - name: Copy test php configuration files to server using templates.
       ansible.builtin.template:
-        src: "{{ item[1] }}"
-        dest: "{{ item[2] }}"
-        owner: "{{ item[0] }}"
+        src: 'templates/test.php'
+        dest: "/var/www/{{ item.user }}/"
+        owner: "{{ item.user }}"
+        group: "{{ item.user }}"
         mode: 0644
-      with_nested:
-        - "{{ app_username }}"
-        - [ 'templates/test.php','templates/fpm.conf.j2','templates/http.conf.j2'  ]
-        - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/.conf','/etc/nginx/sites-available/-http.conf' ]
+      loop: "{{ app_username }}"
 
+    - name: Copy fpm php configuration files to server using templates.
+      ansible.builtin.template:
+        src: 'templates/fpm.conf.j2'
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      loop: "{{ app_username }}"
+
+    - name: Copy http configuration files to server using templates.
+      ansible.builtin.template:
+        src: 'templates/http.conf.j2'
+        dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      loop: "{{ app_username }}"   
+      
   # vars:
   #   file_paths:
   #     - file_src: "templates/info.php"
