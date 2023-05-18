@@ -9,12 +9,12 @@
   tasks:
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+        src: "{{ item[1] }}"
+        dest: "{{ item[2] }}"
         owner: "{{ item.user }}"
         group: "{{ item.user }}"
         mode: '0644'
-      with_items: 
+      with_nested: 
         - "{{ app_username }}"
-        - { src: "files/info.php", "files/fpm.conf.j2", "files/http.conf.j2" }
-        - { dest: "/var/www/{{ item.user }}/", "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf", "/etc/nginx/sites-available/{{ item.user }}-http.conf" }
+        - [ "files/info.php", "files/fpm.conf.j2", "files/http.conf.j2" ]
+        - [ "/var/www/{{ item.user }}/", "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf", "/etc/nginx/sites-available/{{ item.user }}-http.conf" ]
