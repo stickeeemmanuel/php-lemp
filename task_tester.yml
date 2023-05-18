@@ -11,6 +11,7 @@
       ansible.builtin.user:
         name: "{{ item.user }}"
         create_home: true
+        group: "{{ item.user }}"
         home: "/srv/users/{{ item.user }}"
       loop: "{{ app_username }}"
 
