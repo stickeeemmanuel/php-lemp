@@ -11,10 +11,10 @@ app_username:
 user_list: ["app1","app2"]
 
 # The app root directory on the remote server
-app_root_directory: "/var/www/{{ item.name }}"
+app_root_directory: "/var/www/{{ item.user }}"
 
 # The app domain name/URL
-domain_name: "{{ item.name }}.blowtorch.xyz"
+domain_name: "{{ item.user }}.blowtorch.xyz"
 
 
 
