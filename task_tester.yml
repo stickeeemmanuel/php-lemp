@@ -30,8 +30,8 @@
 
     - name: Copy test php page to app directory
       ansible.builtin.template:
-        src: "{{ item[1] }}"
-        dest: "{{ item[2] }}"
+        src: "{{ item[0] }}"
+        dest: "{{ item[1] }}"
         # owner: "{{ item.user }}"
         # group: "{{ item.user }}"
         mode: '0644'
