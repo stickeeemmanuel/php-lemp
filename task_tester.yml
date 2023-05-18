@@ -14,6 +14,6 @@
         dest: "{{ item[1] }}"
         mode: '0644'
       with_nested: 
-        - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-        - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/','/etc/nginx/sites-available/' ]
+        - [ 'files/info.php' ]
+        - [ '/var/www/' ]
 
