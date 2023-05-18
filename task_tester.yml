@@ -38,7 +38,7 @@
       with_nested: 
         # - [ "{{ app_username }}" ]
         - [ 'files/info.php','files/fpm.conf.j2','files/http.conf.j2' ]
-        - [ '/var/www/{{ item.user }}/','/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf','/etc/nginx/sites-available/{{ item.user }}-http.conf' ]
+        - [ '/var/www/','/etc/php/{{ php_version }}/fpm/pool.d/','/etc/nginx/sites-available/' ]
 
     # - name: Copy test php page to app directory
     #   ansible.builtin.template:
