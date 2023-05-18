@@ -8,6 +8,9 @@
   vars:
     - file_src: "files/info.php"
     - file_dest: "/var/www/{{ item.user }}"
+    - app_username:
+        - user: app1
+        - user: app2
 
   tasks:
     - name: Copy test php page to app directory
