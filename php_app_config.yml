@@ -84,6 +84,7 @@
         src: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
         dest: "/etc/nginx/sites-enabled/{{ item.user }}-http.conf"
         state: link
+      loop: "{{ app_username }}"
       notify: 
         - reload nginx
         - restart php-fpm
