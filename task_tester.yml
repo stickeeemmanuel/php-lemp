@@ -19,14 +19,14 @@
         name: "{{ item.user }}"
         create_home: true
         home: "/srv/users/{{ item.user }}"
-      loop: 
+      with_items: 
         - "{{ app_username }}"
 
     - name: Add user www-data to app users' group ## issue only adds app2 group
       ansible.builtin.user:
         name: www-data
         groups: "{{ item.user }}"
-      loop: 
+      with_items: 
         - "{{ app_username }}" 
 
   # vars:
