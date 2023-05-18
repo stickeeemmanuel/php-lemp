@@ -7,11 +7,16 @@
     - vars/main.yml
   
   tasks:
+    - name: Create user groups
+      ansible.builtin.group:
+        name: "{{ item.user }}"
+        state: present
+      loop: "{{ app_username }}"
+
     - name: Create app user ## issue with dir perms [0750]
       ansible.builtin.user:
         name: "{{ item.user }}"
         create_home: true
-        group: "{{ item.user }}"
         home: "/srv/users/{{ item.user }}"
       loop: "{{ app_username }}"
 
