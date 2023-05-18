@@ -6,8 +6,16 @@
   vars_files:
     - vars/main.yml
   vars:
-    file_src: "files/info.php"
-    file_dest: "/var/www/{{ php_version }}"
+    file_paths:
+      - file_src: "files/info.php"
+      - file_src: "files/fpm.conf.j2"
+      - file_src: "files/http.conf.j2"
+      - file_dest: "/var/www/{{ item.user }}/"
+        file_owner: "{{ item.user }}"
+      - file_dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
+        file_owner: "root"
+      - file_dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
+        file_owner: "root"
 
   tasks:
     - name: Copy test php page to app directory
@@ -15,7 +23,8 @@
         src: "{{ file_src }}"
         dest: "{{ file_dest }}"
         mode: '0644'
-      loop: "{{ app_username }}"
+        owner: "{{ item.file_owner }}"
+      loop: [ "{{ app_username }}","{{ file_paths }}" ]
 
       
 
