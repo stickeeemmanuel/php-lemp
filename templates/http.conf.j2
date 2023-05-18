@@ -1,0 +1,23 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    # Declare the domain name of the website
+    server_name {{ domain_name }};
+
+    # Declare the document root directory
+    root  {{ app_root_directory }};
+
+    index index.html index.php;
+
+    # Pass PHP files to PHP-FPM listening on /run/php/php{{ php_version }}-fpm-{{ item.user }}.sock
+    location ~ \.php$ {
+        try_files $uri =404;
+
+        # Mitigate https://httpoxy.org/ vulnerabilities
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_pass unix:/run/php/php{{ php_version }}-fpm-{{ item.user }}.sock;
+        fastcgi_index index.php;
+        include fastcgi.conf;
+    }
+}

@@ -13,7 +13,9 @@
         dest: "{{ item.dest }}"
         mode: '0644'
       with_items: 
-        - { src: files/info.php, dest: "/var/www/" }
+        - { src: files/info.php, dest: "/var/www/{{ item.user }}" }
         - "{{ app_username }}"
+      with_filetree: 'templates/'
+      when: item.state == 'file'
 
 
