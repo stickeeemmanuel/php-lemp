@@ -92,8 +92,8 @@
         state: link
       loop: "{{ app_username }}"
       notify: 
-      - validate fpm configuration
-      - validate nginx configuration      
+      - validate nginx configuration 
+      - validate fpm configuration     
       - reload nginx
       - restart php-fpm
 
