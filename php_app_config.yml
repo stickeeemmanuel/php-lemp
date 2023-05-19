@@ -52,6 +52,12 @@
         dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
       when: check_file_name.stat.exists == true
 
+    - name: Delete original www.conf file
+      ansible.builtin.file:
+        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+        state: absent
+      when: check_file_name.stat.exists 
+
     - name: Copy test php configuration files to server using templates.
       ansible.builtin.template:
         src: 'templates/test.php'
@@ -88,3 +94,4 @@
       notify: 
       - reload nginx
       - restart php-fpm
+      - validate nginx configuration

@@ -10,3 +10,7 @@
     name: php{{php_version }}-fpm
     state: restarted
     changed_when: True
+
+- name: validate nginx configuration
+  command: nginx -t -c /etc/nginx/sites-enabled/{{ item.user }}-http.conf
+  changed_when: false
