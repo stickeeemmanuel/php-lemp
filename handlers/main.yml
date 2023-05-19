@@ -14,3 +14,9 @@
 - name: validate nginx configuration
   command: nginx -t -c /etc/nginx/sites-enabled/{{ item.user }}-http.conf
   changed_when: false
+
+- name: validate fpm configuration
+  command: php-fpm{{php_version }} -t
+  changed_when: false
+
+
