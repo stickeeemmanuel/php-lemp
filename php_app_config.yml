@@ -96,4 +96,8 @@
       - validate fpm configuration     
       - reload nginx
       - restart php-fpm
+      register: handlers_msg
+
+    - name: Print handlers messages
+      debug: var=handlers_msg
 
