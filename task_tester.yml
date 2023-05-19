@@ -17,8 +17,13 @@
         remote_src: true
         src: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
         dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
-        state: absent
       when: check_file_name.stat.exists == true
+
+    - name: Delete original www.conf file
+      ansible.builtin.file:
+        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+        state: absent
+      when: check_file_name.stat.exists 
 
   # vars:
   #   file_paths:
