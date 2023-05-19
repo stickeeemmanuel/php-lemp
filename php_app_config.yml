@@ -60,8 +60,8 @@
 
     - name: Copy test php configuration files to server using templates.
       ansible.builtin.template:
-        src: 'templates/test.php'
-        dest: "/var/www/{{ item.user }}/"
+        src: 'templates/test.php.j2'
+        dest: "/var/www/{{ item.user }}/test.php"
         owner: "{{ item.user }}"
         group: "{{ item.user }}"
         mode: 0644
