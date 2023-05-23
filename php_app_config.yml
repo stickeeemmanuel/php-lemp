@@ -19,6 +19,7 @@
       ansible.builtin.user:
         name: www-data
         groups: "{{ item.user }}"
+        append: yes
       with_items: 
         - "{{ app_username }}" 
 
