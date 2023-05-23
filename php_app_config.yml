@@ -15,7 +15,7 @@
       with_items: 
         - "{{ app_username }}"
 
-    - name: Add user www-data to app users' group ## issue only adds app2 group
+    - name: Add user www-data to app users' group
       ansible.builtin.user:
         name: www-data
         groups: "{{ item.user }}"
