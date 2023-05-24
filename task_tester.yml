@@ -7,23 +7,13 @@
     - vars/main.yml
   
   tasks:
-    - name: Check if www.conf exists 
-      ansible.builtin.stat:
-        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-      register: check_file_name
-
-    - name: Rename www.conf to www.conf.default
-      ansible.builtin.copy:
-        remote_src: true
-        src: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-        dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
-      when: check_file_name.stat.exists == true
-
-    - name: Delete original www.conf file
-      ansible.builtin.file:
-        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-        state: absent
-      when: check_file_name.stat.exists 
+    - name: Add user www-data to app users' group ## issue only adds app2 group
+      ansible.builtin.user:
+        name: www-data
+        groups: "{{ item.user }}"
+        append: yes
+      with_items: 
+        - "{{ app_username }}" 
 
   # vars:
   #   file_paths:
