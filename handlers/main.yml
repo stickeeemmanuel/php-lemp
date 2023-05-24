@@ -1,18 +1,22 @@
 ---
 - name: validate nginx configuration
-  command: "nginx -t"
+  ansible.builtin.command: "nginx -t"
+  changed_when: false
 
 - name: reload nginx
   ansible.builtin.service:
     name: nginx
     state: reloaded
+  changed_when: false
 
 - name: validate fpm configuration
-  command: php-fpm{{php_version }} -t
+  ansible.builtin.command: php-fpm{{ php_version }} -t
+  changed_when: false
 
 - name: restart php-fpm 
   ansible.builtin.service:
-    name: php{{php_version }}-fpm
+    name: php{{ php_version }}-fpm
     state: restarted
+  changed_when: false
 
 
