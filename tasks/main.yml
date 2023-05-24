@@ -85,6 +85,10 @@
   loop: "{{ app_username }}"
   notify: 
   - validate nginx configuration 
-  - validate fpm configuration     
   - reload nginx
+  - validate fpm configuration     
   - restart php-fpm
+
+
+
+  
