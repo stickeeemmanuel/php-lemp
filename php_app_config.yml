@@ -6,98 +6,11 @@
   vars_files:
     - vars/main.yml
   
+  handlers:
+    - import_tasks: handlers/main.yml
+  
   tasks:
-    - name: Create app user ## issue with dir perms [0750]
-      ansible.builtin.user:
-        name: "{{ item.user }}"
-        create_home: true
-        home: "/srv/users/{{ item.user }}"
-      with_items: 
-        - "{{ app_username }}"
+    - import_tasks: tasks/main.yml
 
-    - name: Add user www-data to app users' group ## issue only adds app2 group
-      ansible.builtin.user:
-        name: www-data
-        groups: "{{ item.user }}"
-      with_items: 
-        - "{{ app_username }}" 
-
-    - name: Create app directories
-      ansible.builtin.file:
-        path: "{{ item[1] }}/{{ item[0] }}"
-        owner: "{{ item[0] }}"
-        group: "{{ item[0] }}"
-        mode: '0700'
-        state: directory
-      with_nested:
-        - "{{ user_list }}"
-        - [ '/var/log/php-fpm/','/var/lib/php/sessions/','/var/www/' ]
-
-    - name: Change /var/www directory permissions
-      ansible.builtin.file:
-        path: "/var/www/{{ item }}"
-        mode: '0755'
-        state: directory
-      loop: "{{ user_list }}"
-       
-    - name: Check if www.conf exists 
-      ansible.builtin.stat:
-        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-      register: check_file_name
-
-    - name: Rename www.conf to www.conf.default
-      ansible.builtin.copy:
-        remote_src: true
-        src: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-        dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf.default"
-      when: check_file_name.stat.exists == true
-
-    - name: Delete original www.conf file
-      ansible.builtin.file:
-        path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
-        state: absent
-      when: check_file_name.stat.exists 
-
-    - name: Copy test php configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/test.php.j2'
-        dest: "/var/www/{{ item.user }}/test.php"
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
-        mode: 0644
-      loop: "{{ app_username }}"
-
-    - name: Copy fpm php configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/fpm.conf.j2'
-        dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf"
-        owner: "root"
-        group: "root"
-        mode: 0644
-      loop: "{{ app_username }}"
-
-    - name: Copy http configuration files to server using templates.
-      ansible.builtin.template:
-        src: 'templates/http.conf.j2'
-        dest: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
-        owner: "root"
-        group: "root"
-        mode: 0644
-      loop: "{{ app_username }}"            
-
-    - name: Create a symbolic link from sites-available configuration to sites-enabled configuration
-      ansible.builtin.file:
-        src: "/etc/nginx/sites-available/{{ item.user }}-http.conf"
-        dest: "/etc/nginx/sites-enabled/{{ item.user }}-http.conf"
-        state: link
-      loop: "{{ app_username }}"
-      notify: 
-      - validate nginx configuration 
-      - validate fpm configuration     
-      - reload nginx
-      - restart php-fpm
-      register: handlers_msg
-
-    - name: Print handlers messages
-      debug: var=handlers_msg
+ 
 
