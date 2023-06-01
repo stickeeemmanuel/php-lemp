@@ -2,8 +2,8 @@
 user = {{ item.user }}
 group = {{ item.user }}
 listen = /run/php/php{{ php_version }}-fpm-{{ item.user }}.sock
-listen.owner = www-data
-listen.group = www-data
+listen.owner = {{ item.user }}
+listen.group = {{ item.user }}
 pm = dynamic
 pm.max_children = 5
 pm.start_servers = 2
