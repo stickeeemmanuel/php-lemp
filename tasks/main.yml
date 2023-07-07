@@ -7,11 +7,18 @@
   with_items:
     - "{{ app_username }}"
 
+- name: Change app user directory permissions
+  ansible.builtin.file:
+    path: /srv/users/{{ item }}
+    mode: "0755"
+    state: directory
+  loop: "{{ user_list }}"  
+
 - name: Add user www-data to app users' group
   ansible.builtin.user:
     name: www-data
     groups: "{{ item.user }}"
-    append: yes
+    append: true
   with_items:
     - "{{ app_username }}"
 
@@ -51,7 +58,7 @@
     state: absent
   when: check_file_name.stat.exists
 
-- name: Copy test php configuration files to server using templates.
+- name: Copy test php configuration files directory to server using templates.
   ansible.builtin.template:
     src: templates/test.php.j2
     dest: /var/www/{{ item.user }}/test.php
@@ -60,7 +67,7 @@
     mode: "0644"
   loop: "{{ app_username }}"
 
-- name: Copy fpm php configuration files to server using templates.
+- name: Copy fpm php configuration files directory to server using templates.
   ansible.builtin.template:
     src: templates/fpm.conf.j2
     dest: /etc/php/{{ php_version }}/fpm/pool.d/{{ item.user }}.conf
@@ -69,7 +76,7 @@
     mode: "0644"
   loop: "{{ app_username }}"
 
-- name: Copy http configuration files to server using templates.
+- name: Copy http configuration files directory to server using templates.
   ansible.builtin.template:
     src: templates/http.conf.j2
     dest: /etc/nginx/sites-available/{{ item.user }}-http.conf
@@ -90,18 +97,18 @@
   #   - validate fpm configuration
   #   - restart php-fpm
 
-- name: validate nginx configuration
-  ansible.builtin.command: "nginx -t"
+- name: Validate nginx configuration
+  ansible.builtin.command: nginx -t
 
-- name: reload nginx
+- name: Reload nginx
   ansible.builtin.service:
     name: nginx
     state: reloaded
 
-- name: validate fpm configuration
+- name: Validate fpm configuration
   ansible.builtin.command: php-fpm{{ php_version }} -t
 
-- name: restart php-fpm
+- name: Restart php-fpm
   ansible.builtin.service:
     name: php{{ php_version }}-fpm
     state: restarted
