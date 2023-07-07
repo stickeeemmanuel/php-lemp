@@ -8,6 +8,6 @@
 
   handlers:
     - ansible.builtin.import_tasks: handlers/main.yml
-    
+
   tasks:
     - ansible.builtin.import_tasks: tasks/main.yml
